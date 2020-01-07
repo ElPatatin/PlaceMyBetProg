@@ -1,0 +1,132 @@
+{
+    "apuestas": [
+      {
+        "IdApuesta": "1",
+        "EsUnder": "b'{{2}}",
+        "Cuota": "1.43",
+        "Dinero": "25",
+        "MercadoId": "1",
+        "UsuarioId": "1"
+      },
+      {
+        "IdApuesta": "2",
+        "EsUnder": "b'{{3}}",
+        "Cuota": "1.9",
+        "Dinero": "20",
+        "MercadoId": "2",
+        "UsuarioId": "1"
+      },
+      {
+        "IdApuesta": "3",
+        "EsUnder": "b'{{4}}",
+        "Cuota": "2.85",
+        "Dinero": "50",
+        "MercadoId": "3",
+        "UsuarioId": "2"
+      },
+      {
+        "IdApuesta": "4",
+        "EsUnder": "b'{{5}}",
+        "Cuota": "1.5",
+        "Dinero": "200",
+        "MercadoId": "1",
+        "UsuarioId": "1"
+      },
+      {
+        "IdApuesta": "5",
+        "EsUnder": "b'{{6}}",
+        "Cuota": "1.5",
+        "Dinero": "55",
+        "MercadoId": "5",
+        "UsuarioId": "2"
+      }
+    ],
+    "cuentas": [
+      {
+        "IdCuenta": "1",
+        "NumeroTarjeta": "77777777",
+        "Saldo": "5000",
+        "Banco": "SANTANDER",
+        "UsuarioId": "1"
+      },
+      {
+        "IdCuenta": "2", 
+        "NumeroTarjeta": "88888888",
+        "Saldo": "250",
+        "Banco": "BBVA",
+        "UsuarioId": "2"
+      }
+    ],
+    "eventos": [
+      {
+        "IdEvento": "1",
+        "EquipoLocal": "Madrid",
+        "EquipoVisitante": "Osasuna",
+        "InicioPartido": "2016/02/01 18:00",
+        "FinalPartido": "2016/02/01 19:30"
+      },
+      {
+        "IdEvento": "4",
+        "EquipoLocal": "Valencia",
+        "EquipoVisitante": "Barcelona",
+        "InicioPartido": null,
+        "FinalPartido": null
+      }
+    ],
+    "mercados": [
+      {
+        "IdMercado": "1",
+        "Tipo": "1.5",
+        "CuotaOver": "1.1083333333333334",
+        "CuotaUnder": "1.9",
+        "DineroApostadoOver": "300",
+        "DineroApostadoUnder": "50",
+        "EventoId": "1"
+      },
+      {
+        "IdMercado": "2",
+        "Tipo": "2.5",
+        "CuotaOver": "1.9",
+        "CuotaUnder": "2.85",
+        "DineroApostadoOver": "100",
+        "DineroApostadoUnder": "100",
+        "EventoId": "1"
+      },
+      {
+        "IdMercado": "3",
+        "Tipo": "3.5",
+        "CuotaOver": "2.85",
+        "CuotaUnder": "1.43",
+        "DineroApostadoOver": "50",
+        "DineroApostadoUnder": "100",
+        "EventoId": "1"
+      },
+      {
+        "IdMercado": "5",
+        "Tipo": "1.5",
+        "CuotaOver": "1.9",
+        "CuotaUnder": "1.9",
+        "DineroApostadoOver": "100",
+        "DineroApostadoUnder": "100",
+        "EventoId": "4"
+      }
+    ],
+    "usuarios": [
+      {
+        "IdUsuario": "1",
+        "Email": "ARANTXA000@GMAIL.COM",
+        "Password": "1234", 
+        "Nombre": "Arantxa",
+        "Apellidos": "De Juan, González",
+        "Edad": "27"
+      },
+      {
+        "IdUsuario": "2",
+        "Email": "PEPEPEREZ2000@GMAIL.COM",
+        "Password": "1111", 
+        "Nombre": "Pepe",
+        "Apellidos": "Perez Juan",
+        "Edad": "45"
+      }
+    ]
+  }

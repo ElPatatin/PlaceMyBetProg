@@ -7,7 +7,8 @@ module.exports = {
         cwd: 'babelrc',
         extensions: ['.ts', '.tsx', '.js', '.ios.js', '.android.js'],
         alias: {
-          'types': './types/index.tsx'
+          'types': './types/index.tsx',
+          'components': './components/index.tsx'
         }
       }
     ],

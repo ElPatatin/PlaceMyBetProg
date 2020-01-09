@@ -9,7 +9,8 @@
     "resolveJsonModule": true,
     "baseUrl": "./",
     "paths": {
-      "types": ["./types/*", "./types/index.tsx"]
+      "types": ["./types/*", "./types/index.tsx"],
+      "components": ["./components/*", "./compoonents/index.tsx"]
     },
   }
 }

@@ -25,6 +25,8 @@ interface IGFormProps<T>{
 
 export function GForm<T = any>({onSubmit, config}: IGFormProps<T>) {
     let result: any = {}
+
+    const defaultSumbitTitle = "Submit"
     const beforeOnSubmit = () => {
         let validFlag = true
 
@@ -38,44 +40,48 @@ export function GForm<T = any>({onSubmit, config}: IGFormProps<T>) {
         if(validFlag) {
             onSubmit(result)
         }
-    }
-
-    
-    let elements = config.elements.map((element) => {        
-        switch(element.typeOfInput){
-            case typeOfInput.checkBox:
-
-                break
-            case typeOfInput.password:
-                return (
-                    <View>
-                        <Text>{element.label}</Text>
-                        <TextInput 
-                            onChangeText={(text) => result[element.dataName] = text}
-                            secureTextEntry={true}
-                        />
-                    </View>
-                )
-                break
-            case typeOfInput.inputText:
-                return(
-                    <View>
-                        <Text>{element.label}</Text>
-                        <TextInput 
-                            onChangeText={(text) => result[element.dataName] = text}
-                            secureTextEntry={false}
-                        />
-                    </View>
-                )
-                break
+        else {
+            alert("Debes rellenar todos los campos!")
         }
-    })
+    }
+    const FormElements = () => {
+        let elements = config.elements.map((element) => {
+            switch(element.typeOfInput){
+                case TypeOfInput.checkBox:
+    
+                    break
+                case TypeOfInput.password:
+                    return (
+                        <View>
+                            <Text>{element.label}</Text>
+                            <TextInput 
+                                onChangeText={(text) => result[element.dataName] = text}
+                                secureTextEntry={true}
+                            />
+                        </View>
+                    )
+                case TypeOfInput.inputText:
+                    return (
+                        <View>
+                            <Text>{element.label}</Text>
+                            <TextInput 
+                                onChangeText={(text) => result[element.dataName] = text}
+                                secureTextEntry={false}
+                            />
+                        </View>
+                    )
+            }
+        })
+        
+        return <View>{elements}</View>
+    } 
+    
 
     return (
         <View>
-            {elements}
+            <FormElements/>
             <Button 
-                title={config.buttonSubmitTitle === undefined? "Submit" : config.buttonSubmitTitle}
+                title={config.buttonSubmitTitle === undefined? defaultSumbitTitle : config.buttonSubmitTitle}
                 onPress={beforeOnSubmit}
             />
         </View>

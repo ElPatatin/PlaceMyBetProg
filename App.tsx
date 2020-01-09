@@ -4,11 +4,15 @@ import {IMarket, IEvent} from 'types'
 import {GForm, TypeOfInput} from 'components'
 
 export default function App() {
+  const login = (user: string, pass: string) => {
+    alert(`Estas loggeado ${user}, con constraseña ${pass}`)
+  }
+
   return (
     <View style={styles.container}>
       <GForm<{user: string, pass: string}> 
         onSubmit={(result) => {
-          alert(`Estas loggeado ${result.user}, con constraseña ${result.pass}`)
+          login(result.user, result.pass)
         }} config={{
           elements: [
               {dataName: "user", label: "Usuario", typeOfInput: TypeOfInput.inputText, required: true},

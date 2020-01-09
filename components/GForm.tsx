@@ -1,11 +1,18 @@
+import React from 'react'
 import {IMarket} from 'types'
-import { View } from 'react-native'
+import { View, TextInput, Text, Button } from 'react-native'
+
+export enum TypeOfInput {
+    "password",
+    "inputText",
+    "checkBox",
+}
 
 interface IGFormElement {
     label: string,
     required: boolean,
     dataName: string,
-    typeOfInput: "inputText" | "password" | "checkBox"
+    typeOfInput: TypeOfInput
 }
 
 interface IGFormProps<T>{
@@ -16,12 +23,63 @@ interface IGFormProps<T>{
     }
 }
 
-export default function GForm<T = any>({onSubmit, config}: IGFormProps<T>) {
-    config.elements.map((element) => {
-        return 
+export function GForm<T = any>({onSubmit, config}: IGFormProps<T>) {
+    let result: any = {}
+    const beforeOnSubmit = () => {
+        let validFlag = true
+
+        config.elements.forEach(element => {
+            const resultField = result[element.dataName]
+            if ((resultField === undefined || resultField == "") && element.required){
+                validFlag = false
+            }
+        });
+
+        if(validFlag) {
+            onSubmit(result)
+        }
+    }
+
+    
+    let elements = config.elements.map((element) => {        
+        switch(element.typeOfInput){
+            case typeOfInput.checkBox:
+
+                break
+            case typeOfInput.password:
+                return (
+                    <View>
+                        <Text>{element.label}</Text>
+                        <TextInput 
+                            onChangeText={(text) => result[element.dataName] = text}
+                            secureTextEntry={true}
+                        />
+                    </View>
+                )
+                break
+            case typeOfInput.inputText:
+                return(
+                    <View>
+                        <Text>{element.label}</Text>
+                        <TextInput 
+                            onChangeText={(text) => result[element.dataName] = text}
+                            secureTextEntry={false}
+                        />
+                    </View>
+                )
+                break
+        }
     })
 
-    return <View></View>
+    return (
+        <View>
+            {elements}
+            <Button 
+                title={config.buttonSubmitTitle === undefined? "Submit" : config.buttonSubmitTitle}
+                onPress={beforeOnSubmit}
+            />
+        </View>
+    )
 }
 
 

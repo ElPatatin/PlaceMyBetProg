@@ -1,6 +1,6 @@
-import React from 'react'
-import {IMarket} from 'types'
-import { View, TextInput, Text, Button } from 'react-native'
+import React, {useState, useEffect} from 'react'
+import { View, Button, Text } from 'react-native'
+import { GFormInput } from 'components'
 
 export enum TypeOfInput {
     "password",
@@ -10,97 +10,96 @@ export enum TypeOfInput {
 
 interface IGFormElement {
     label: string,
-    required: boolean,
     dataName: string,
-    typeOfInput: TypeOfInput
+    typeOfInput: TypeOfInput,
+    required?: boolean
+    errorMessage?: string
 }
 
 interface IGFormProps<T>{
     onSubmit(formData: T): void,
-    config: {
-        elements: Array<IGFormElement>,
-        buttonSubmitTitle?: string,
-    }
+    formElements: Array<IGFormElement>,
+    formTitle?: string
+    buttonSubmitTitle?: string,
 }
 
-export function GForm<T = any>({onSubmit, config}: IGFormProps<T>) {
-    let result: any = {}
+let result: any = {}
 
+export function GForm<T = any>({onSubmit, formElements, formTitle, buttonSubmitTitle }: IGFormProps<T>) {
+    const [SubmitPressed, setSubmitPressed] = useState(false)
     const defaultSumbitTitle = "Submit"
-    const beforeOnSubmit = () => {
+
+    function elementErrorMsg(element: IGFormElement) {
+        const defaultErrorMsg = "Debes rellenar este campo"
+
+        if(!SubmitPressed || !element.required) return undefined
+        if(result[element.dataName] === undefined || result[element.dataName] === "") {
+            return element.errorMessage === undefined?
+                defaultErrorMsg :
+                element.errorMessage
+        }
+        else return undefined
+    }
+    function beforeOnSubmit() {
         let validFlag = true
 
-        config.elements.forEach(element => {
+        formElements.forEach(element => {
             const resultField = result[element.dataName]
-            if ((resultField === undefined || resultField == "") && element.required){
-                validFlag = false
-            }
+            if ((resultField === undefined || resultField == "") && element.required) validFlag = false
         });
 
-        if(validFlag) {
-            onSubmit(result)
-        }
-        else {
-            alert("Debes rellenar todos los campos!")
-        }
+        if(validFlag) onSubmit(result)
     }
-    const FormElements = () => {
-        let elements = config.elements.map((element) => {
+    function FormElements() {
+        let elements = formElements.map((element) => {
             switch(element.typeOfInput){
                 case TypeOfInput.checkBox:
     
                     break
                 case TypeOfInput.password:
-                    return (
-                        <View>
-                            <Text>{element.label}</Text>
-                            <TextInput 
-                                onChangeText={(text) => result[element.dataName] = text}
-                                secureTextEntry={true}
-                            />
-                        </View>
-                    )
+                    return <GFormInput
+                        label={element.label}
+                        onChangeText={(text) => result[element.dataName] = text}
+                        password={true}
+                        value={result[element.dataName]}
+                        errorMessage={elementErrorMsg(element)}
+                    />
                 case TypeOfInput.inputText:
-                    return (
-                        <View>
-                            <Text>{element.label}</Text>
-                            <TextInput 
-                                onChangeText={(text) => result[element.dataName] = text}
-                                secureTextEntry={false}
-                            />
-                        </View>
-                    )
+                    return <GFormInput
+                        label={element.label}
+                        onChangeText={(text) => result[element.dataName] = text}
+                        password={false}
+                        value={result[element.dataName]}
+                        errorMessage={elementErrorMsg(element)}
+                    />
             }
         })
         
         return <View>{elements}</View>
-    } 
-    
+    }
+    function render(){
+        if (formTitle === undefined) {
+            return (
+                <View>
+                    <FormElements/>
+                    <Button 
+                        title={buttonSubmitTitle === undefined? defaultSumbitTitle : buttonSubmitTitle}
+                        onPress={() =>{beforeOnSubmit(); setSubmitPressed(true)}}
+                    />
+                </View>
+            )
+        }
+        else return(
+            <View>
+                <Text>{formTitle}</Text>
+                <FormElements/>
+                <Button 
+                    title={buttonSubmitTitle === undefined? defaultSumbitTitle : buttonSubmitTitle}
+                    onPress={() =>{beforeOnSubmit(); setSubmitPressed(true)}}
+                />
+            </View>
+        )
+    }
 
-    return (
-        <View>
-            <FormElements/>
-            <Button 
-                title={config.buttonSubmitTitle === undefined? defaultSumbitTitle : config.buttonSubmitTitle}
-                onPress={beforeOnSubmit}
-            />
-        </View>
-    )
+    return render()
 }
-
-
-/** EJEMPLO DE FUNCIONAMIENTO
-
-function login(user: string, pass: string) {
-
-}
-
-<GForm<{user: string, pass: string}> onSubmit={(result) => {
-    login(result.user, result.pass)
-}} config={{
-    elements: [
-        {dataName: "user", label: "Usuario", typeOfInput: "inputText", required: true},
-        {dataName: "pass", label: "Contraseña", typeOfInput: "password", required: true}
-    ],
-    buttonSubmitTitle: "Logeate!"
-}} /> **/

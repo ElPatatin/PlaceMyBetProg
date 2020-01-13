@@ -8,6 +8,7 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo/vector-icons": "^10.0.6",
     "babel-plugin-jest-hoist": "^24.9.0",
     "expo": "~36.0.0",
     "react": "~16.9.0",
@@ -15,7 +16,6 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
     "react-native-elements": "^1.2.7",
     "react-native-screens": "2.0.0-alpha.12",
-    "react-native-vector-icons": "^6.6.0",
     "react-native-web": "~0.11.7"
   },
   "devDependencies": {

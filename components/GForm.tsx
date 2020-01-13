@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react'
-import { View, Button, Text } from 'react-native'
-import { GFormInput } from 'components'
+import React, { useState } from 'react'
+import { View, Text, StyleSheet } from 'react-native'
+import { Input, Button, CheckBox } from 'react-native-elements'
+
 
 export enum TypeOfInput {
     "password",
@@ -23,16 +24,18 @@ interface IGFormProps<T>{
     buttonSubmitTitle?: string,
 }
 
-let result: any = {}
 
+let result: any = {}
 export function GForm<T = any>({onSubmit, formElements, formTitle, buttonSubmitTitle }: IGFormProps<T>) {
-    const [SubmitPressed, setSubmitPressed] = useState(false)
-    const defaultSumbitTitle = "Submit"
+    
+    const [submitPressed, setSubmitPressed] = useState(0)
+    const submitTitle = buttonSubmitTitle === undefined? "Submit" : buttonSubmitTitle
+
 
     function elementErrorMsg(element: IGFormElement) {
         const defaultErrorMsg = "Debes rellenar este campo"
 
-        if(!SubmitPressed || !element.required) return undefined
+        if(submitPressed <= 0 || !element.required) return undefined
         if(result[element.dataName] === undefined || result[element.dataName] === "") {
             return element.errorMessage === undefined?
                 defaultErrorMsg :
@@ -40,66 +43,91 @@ export function GForm<T = any>({onSubmit, formElements, formTitle, buttonSubmitT
         }
         else return undefined
     }
+
     function beforeOnSubmit() {
         let validFlag = true
 
         formElements.forEach(element => {
             const resultField = result[element.dataName]
-            if ((resultField === undefined || resultField == "") && element.required) validFlag = false
+            if ((resultField === undefined || resultField == "") && element.required)
+                validFlag = false
         });
 
-        if(validFlag) onSubmit(result)
+        if(validFlag) {
+            let finalResult = {...result}
+            result = {}
+            setSubmitPressed(0)
+            onSubmit(finalResult)
+        }
+        else setSubmitPressed((prevValue) => prevValue + 1)
     }
+    
     function FormElements() {
         let elements = formElements.map((element) => {
             switch(element.typeOfInput){
                 case TypeOfInput.checkBox:
-    
-                    break
-                case TypeOfInput.password:
-                    return <GFormInput
-                        label={element.label}
-                        onChangeText={(text) => result[element.dataName] = text}
-                        password={true}
-                        value={result[element.dataName]}
-                        errorMessage={elementErrorMsg(element)}
+                    result[element.dataName] = false
+                    return <CheckBox
+                        title={element.label}
+                        checked={result[element.dataName]}
+                        onPress={() => result[element.dataName] = !result[element.dataName]}
+                        containerStyle={styles.elementContainer}
+                        checkedIcon='dot-circle-o'
+                        uncheckedIcon='circle-o'
                     />
-                case TypeOfInput.inputText:
-                    return <GFormInput
-                        label={element.label}
-                        onChangeText={(text) => result[element.dataName] = text}
-                        password={false}
-                        value={result[element.dataName]}
+                case TypeOfInput.password:
+                    return <Input
+                        containerStyle = {styles.elementContainer}
+                        inputStyle= {styles.element}
                         errorMessage={elementErrorMsg(element)}
+                        onChangeText={(text) => result[element.dataName] = text}
+                        secureTextEntry={true}
+                        label={element.label}
+                        defaultValue={result[element.dataName]}
+                />
+                case TypeOfInput.inputText:
+                    return <Input
+                        containerStyle = {styles.elementContainer}
+                        inputStyle= {styles.element}
+                        errorMessage={elementErrorMsg(element)}
+                        onChangeText={(text) => result[element.dataName] = text}
+                        secureTextEntry={false}
+                        label={element.label}
+                        defaultValue={result[element.dataName]}
                     />
             }
         })
         
-        return <View>{elements}</View>
-    }
-    function render(){
-        if (formTitle === undefined) {
-            return (
-                <View>
-                    <FormElements/>
-                    <Button 
-                        title={buttonSubmitTitle === undefined? defaultSumbitTitle : buttonSubmitTitle}
-                        onPress={() =>{beforeOnSubmit(); setSubmitPressed(true)}}
-                    />
-                </View>
-            )
-        }
-        else return(
-            <View>
-                <Text>{formTitle}</Text>
-                <FormElements/>
-                <Button 
-                    title={buttonSubmitTitle === undefined? defaultSumbitTitle : buttonSubmitTitle}
-                    onPress={() =>{beforeOnSubmit(); setSubmitPressed(true)}}
-                />
-            </View>
-        )
+        return <View style={styles.elementsContainer}>{elements}</View>
     }
 
-    return render()
+    return (
+        <View style={styles.container}>
+            <Text style={styles.title}>{formTitle}</Text>
+            <FormElements/>
+            <Button 
+                title={submitTitle}
+                onPress={beforeOnSubmit}
+            />
+        </View>
+    )
 }
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    title: {
+        fontWeight: "bold",
+        fontSize: 20,
+        padding: 20,
+        textAlign: "center"
+    },
+    elementsContainer: {},
+    elementContainer: {
+        width: 250,
+        marginBottom: 15,
+    },
+    element: {}
+})

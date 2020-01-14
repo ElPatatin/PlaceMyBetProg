@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { Input, Button, CheckBox } from 'react-native-elements'
+import { View, Text, Switch,StyleSheet } from 'react-native'
+import { Input, Button } from 'react-native-elements'
 
 
 export enum TypeOfInput {
     "password",
     "inputText",
-    "checkBox",
+    "switch",
 }
 
 interface IGFormElement {
@@ -25,16 +25,16 @@ interface IGFormProps<T>{
 }
 
 
-let result: any = {}
+let preResult = {}
 export function GForm<T = any>({onSubmit, formElements, formTitle, buttonSubmitTitle }: IGFormProps<T>) {
     
+    const [result, setResult] = useState<any>({})
     const [submitPressed, setSubmitPressed] = useState(0)
     const submitTitle = buttonSubmitTitle === undefined? "Submit" : buttonSubmitTitle
+    const defaultErrorMsg = "Debes rellenar este campo"
 
 
     function elementErrorMsg(element: IGFormElement) {
-        const defaultErrorMsg = "Debes rellenar este campo"
-
         if(submitPressed <= 0 || !element.required) return undefined
         if(result[element.dataName] === undefined || result[element.dataName] === "") {
             return element.errorMessage === undefined?
@@ -46,18 +46,21 @@ export function GForm<T = any>({onSubmit, formElements, formTitle, buttonSubmitT
 
     function beforeOnSubmit() {
         let validFlag = true
+        let actualResult = {...result, ...preResult}
+        setResult(actualResult)
 
         formElements.forEach(element => {
-            const resultField = result[element.dataName]
+            const resultField = actualResult[element.dataName]
             if ((resultField === undefined || resultField == "") && element.required)
                 validFlag = false
         });
 
+        alert(validFlag)
         if(validFlag) {
-            let finalResult = {...result}
-            result = {}
+            preResult={}
+            setResult({})
             setSubmitPressed(0)
-            onSubmit(finalResult)
+            onSubmit(actualResult)
         }
         else setSubmitPressed((prevValue) => prevValue + 1)
     }
@@ -65,35 +68,42 @@ export function GForm<T = any>({onSubmit, formElements, formTitle, buttonSubmitT
     function FormElements() {
         let elements = formElements.map((element) => {
             switch(element.typeOfInput){
-                case TypeOfInput.checkBox:
-                    result[element.dataName] = false
-                    return <CheckBox
-                        title={element.label}
-                        checked={result[element.dataName]}
-                        onPress={() => result[element.dataName] = !result[element.dataName]}
-                        containerStyle={styles.elementContainer}
-                        checkedIcon='dot-circle-o'
-                        uncheckedIcon='circle-o'
-                    />
+                case TypeOfInput.switch:
+                    if(result[element.dataName] === undefined) result[element.dataName] = false
+                    return (
+                        <View key={element.dataName} style={{...styles.elementContainer, flexDirection: "row", justifyContent:"center"}}>
+                            <Text style={{textAlignVertical: "center", marginRight:20}} >{element.label}</Text>
+                            <Switch
+                                onValueChange={value => {
+                                    let newResult = {...result}
+                                    newResult[element.dataName] = value
+                                    setResult(newResult)
+                                }}
+                                value={result[element.dataName]}
+                            />
+                        </View>
+                    )
                 case TypeOfInput.password:
                     return <Input
+                        key={element.dataName}      
                         containerStyle = {styles.elementContainer}
                         inputStyle= {styles.element}
                         errorMessage={elementErrorMsg(element)}
-                        onChangeText={(text) => result[element.dataName] = text}
+                        onChangeText={text => preResult[element.dataName] = text}
                         secureTextEntry={true}
                         label={element.label}
-                        defaultValue={result[element.dataName]}
+                        defaultValue={preResult[element.dataName]}
                 />
                 case TypeOfInput.inputText:
                     return <Input
+                        key={element.dataName}
                         containerStyle = {styles.elementContainer}
                         inputStyle= {styles.element}
                         errorMessage={elementErrorMsg(element)}
-                        onChangeText={(text) => result[element.dataName] = text}
+                        onChangeText={text => preResult[element.dataName] = text}
                         secureTextEntry={false}
                         label={element.label}
-                        defaultValue={result[element.dataName]}
+                        defaultValue={preResult[element.dataName]}
                     />
             }
         })

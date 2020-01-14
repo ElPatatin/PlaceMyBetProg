@@ -26,9 +26,9 @@ export default function App() {
           {
             dataName: "remember", 
             label: "Recordar contraseña", 
-            typeOfInput: TypeOfInput.checkBox, 
+            typeOfInput: TypeOfInput.switch, 
             required: false
-          }
+          },
         ]}
         buttonSubmitTitle="Logeate!"
         formTitle="Log in"

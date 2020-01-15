@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { Input, Button } from 'react-native-elements'
-import { CustomSwitch } from 'components'
+import CustomSwitch from './CustomSwitch'
 
 
 export enum TypeOfInput {

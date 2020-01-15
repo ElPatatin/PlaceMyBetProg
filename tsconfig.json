@@ -10,7 +10,11 @@
     "baseUrl": "./",
     "paths": {
       "types": ["./types/*", "./types/index.tsx"],
-      "components": ["./components/*", "./components/index.tsx"]
+      "components": ["./components/*", "./components/index.tsx"],
+      "templates": ["./templates/*", "./templates/index.tsx"],
+      "screens": ["./screens/*", "./screens/index.tsx"],
+      "servicies": ["./servicies/*", "./servicies/index.tsx"],
+
     },
   }
 }

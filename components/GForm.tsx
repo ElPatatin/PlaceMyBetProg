@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { View, Text, Switch,StyleSheet } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import { Input, Button } from 'react-native-elements'
+import { CustomSwitch } from 'components'
 
 
 export enum TypeOfInput {
@@ -9,7 +10,7 @@ export enum TypeOfInput {
     "switch",
 }
 
-interface IGFormElement {
+export interface IGFormElement {
     label: string,
     dataName: string,
     typeOfInput: TypeOfInput,
@@ -47,7 +48,6 @@ export function GForm<T = any>({onSubmit, formElements, formTitle, buttonSubmitT
     function beforeOnSubmit() {
         let validFlag = true
         let actualResult = {...result, ...preResult}
-        setResult(actualResult)
 
         formElements.forEach(element => {
             const resultField = actualResult[element.dataName]
@@ -62,7 +62,10 @@ export function GForm<T = any>({onSubmit, formElements, formTitle, buttonSubmitT
             setSubmitPressed(0)
             onSubmit(actualResult)
         }
-        else setSubmitPressed((prevValue) => prevValue + 1)
+        else {
+            setResult(actualResult)
+            setSubmitPressed((prevValue) => prevValue + 1)
+        }
     }
     
     function FormElements() {
@@ -70,19 +73,17 @@ export function GForm<T = any>({onSubmit, formElements, formTitle, buttonSubmitT
             switch(element.typeOfInput){
                 case TypeOfInput.switch:
                     if(result[element.dataName] === undefined) result[element.dataName] = false
-                    return (
-                        <View key={element.dataName} style={{...styles.elementContainer, flexDirection: "row", justifyContent:"center"}}>
-                            <Text style={{textAlignVertical: "center", marginRight:20}} >{element.label}</Text>
-                            <Switch
-                                onValueChange={value => {
-                                    let newResult = {...result}
-                                    newResult[element.dataName] = value
-                                    setResult(newResult)
-                                }}
-                                value={result[element.dataName]}
-                            />
-                        </View>
-                    )
+                    return <CustomSwitch
+                        label={element.label}
+                        style={styles.elementContainer}
+                        value={result[element.dataName]}
+                        onValueChange={(value) => {
+                            let newResult = { ...result }
+                            newResult[element.dataName] = value
+                            setResult(newResult)
+                        }}
+                        key={element.dataName}
+                    />
                 case TypeOfInput.password:
                     return <Input
                         key={element.dataName}      
@@ -113,7 +114,7 @@ export function GForm<T = any>({onSubmit, formElements, formTitle, buttonSubmitT
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>{formTitle}</Text>
+            <Text style={formTitle? styles.title : {display:"none"}}>{formTitle}</Text>
             <FormElements/>
             <Button 
                 title={submitTitle}

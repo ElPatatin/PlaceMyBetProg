@@ -30,7 +30,7 @@ export default function App() {
             required: false
           },
         ]}
-        buttonSubmitTitle="Logeate!"
+        buttonSubmitTitle="Log In!"
         formTitle="Log in"
       />
     </View>

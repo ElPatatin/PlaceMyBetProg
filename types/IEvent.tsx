@@ -1,7 +1,7 @@
 export default interface IEvent {
     id: number,
     localTeam: string,
-    guestTean: string,
+    guestTeam: string,
     startDate: string,
     endData: string
 }

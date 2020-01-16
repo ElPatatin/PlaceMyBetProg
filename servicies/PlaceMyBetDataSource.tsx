@@ -20,6 +20,6 @@ export default function PlaceMyBetDataSource({path, method, params, body} : IDat
         }
         else throw "response is not ok";
     }).catch(error => {
-        alert(error)
+        console.log(error)
     })
 }

@@ -15,11 +15,14 @@ export default function ListObjTemplate ({dataSource, title}:IListObjProps) {
         })
     }, [])
 
-    console.log(data)
     return (
         <View>
             <Text>{title}</Text>
-            <View>{data}</View>
+            <FlatList 
+                data={data}
+                renderItem={({item}) => item}
+                keyExtractor={(item, index) => index.toString()}
+            />
         </View>
     )
 }

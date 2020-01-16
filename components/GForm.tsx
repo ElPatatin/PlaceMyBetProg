@@ -18,7 +18,7 @@ export interface IGFormElement {
     errorMessage?: string
 }
 
-interface IGFormProps<T>{
+export interface IGFormProps<T>{
     onSubmit(formData: T): void,
     formElements: Array<IGFormElement>,
     formTitle?: string

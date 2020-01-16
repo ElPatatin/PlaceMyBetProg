@@ -1,21 +1,19 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { ListObjTemplate } from 'templates'
 import { EventsService } from 'servicies'
 import { Text, View } from 'react-native'
-import { func } from 'prop-types'
+import { IEvent } from 'types'
 
-function Component({texte}) {
-    return <Text>{texte}</Text> 
+
+interface IComponentProps {
+    event: IEvent
 }
-
 
 export default function ListEventsScreen() {
     return <ListObjTemplate 
-        dataSource={() => {
-            return EventsService.findAll().then(events => {
-                return events.map((event,pos) => <Component texte ={event}/>)
-            })
-        }}
+        dataSource={() => EventsService.findAll().then(events =>
+            events.map((event) =>
+                <Text>{`${event.localTeam} | ${event.guestTeam}`}</Text>))}
         title="Eventos"
     />
         

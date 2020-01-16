@@ -1,4 +1,4 @@
-import {GForm, TypeOfInput} from './GForm'
+import {GForm, TypeOfInput, IGFormProps} from './GForm'
 import CustomSwitch from './CustomSwitch'
 
-export { GForm, TypeOfInput, CustomSwitch }
+export { GForm, TypeOfInput, CustomSwitch, IGFormProps }

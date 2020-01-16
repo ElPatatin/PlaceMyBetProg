@@ -1,17 +1,14 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import {GForm, TypeOfInput } from 'components'
+import { TypeOfInput } from 'components'
 import { SessionTemplate } from 'templates';
+import { IGeneralScreenProps } from 'types' 
+ 
 
-export default function LoginScreen() {
-  const login = (user: string, pass: string, remember: boolean) => {
-    alert(`Estas loggeado ${user}, con constraseña ${pass} recuerdame: ${remember}`)
-  }
-
+export default function LoginScreen({navigation}: IGeneralScreenProps) {
   return (
-    <SessionTemplate<{user: string, pass: string, remember: boolean}> 
+    <SessionTemplate<{user: string, pass: string, email: string}> 
       formProps={{
-        onSubmit: result => login(result.user, result.pass, result.remember),
+        onSubmit: result => alert("Funcionalidad no acabada"),
         formElements:[
           {
             dataName: "user",
@@ -26,16 +23,18 @@ export default function LoginScreen() {
           },
           {
             dataName: "remember", 
-            label: "Recordar contraseña", 
-            typeOfInput: TypeOfInput.switch, 
-            required: false
+            label: "Email", 
+            typeOfInput: TypeOfInput.inputText, 
+            required: true
           }
         ],
-        buttonSubmitTitle:"Log In!",
-        formTitle:"Log in"
+        formExtraButtons: [{
+          onPressButton:() => navigation.navigate("Login"),
+          title:"¿Ya estas logeado?"
+        }],
+        buttonSubmitTitle:"Registrate!",
+        formTitle:"Registro"
       }}
-      lowerButtonTitle="¿No estas registrado?"
-      onPressLowerButton={() => {}}
     />
   );
 }

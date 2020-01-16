@@ -1,17 +1,17 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import {GForm, TypeOfInput } from 'components'
+import { TypeOfInput } from 'components'
 import { SessionTemplate } from 'templates';
+import { SessionService } from 'servicies';
+import { IGeneralScreenProps } from 'types' 
 
-export default function LoginScreen() {
-  const login = (user: string, pass: string, remember: boolean) => {
-    alert(`Estas loggeado ${user}, con constraseña ${pass} recuerdame: ${remember}`)
-  }
 
+export default function LoginScreen({navigation}: IGeneralScreenProps) {
   return (
     <SessionTemplate<{user: string, pass: string, remember: boolean}> 
       formProps={{
-        onSubmit: result => login(result.user, result.pass, result.remember),
+        onSubmit: result => SessionService.login(result.user, result.pass).then( result => {
+          if(result) navigation.navigate("Events"); else alert("Contraseña incorrecta")
+        }),
         formElements:[
           {
             dataName: "user",
@@ -31,11 +31,13 @@ export default function LoginScreen() {
             required: false
           }
         ],
+        formExtraButtons: [{
+          onPressButton:() => navigation.navigate("Register"),
+          title:"¿No estas logeado?"
+        }],
         buttonSubmitTitle:"Log In!",
         formTitle:"Log in"
       }}
-      lowerButtonTitle="¿No estas registrado?"
-      onPressLowerButton={() => {}}
     />
   );
 }

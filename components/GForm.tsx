@@ -18,16 +18,28 @@ export interface IGFormElement {
     errorMessage?: string
 }
 
+export interface IGFormExtraButton {
+    title: string,
+    onPressButton(): void 
+}
+
 export interface IGFormProps<T>{
     onSubmit(formData: T): void,
     formElements: Array<IGFormElement>,
-    formTitle?: string
+    formExtraButtons?: Array<IGFormExtraButton>,
+    formTitle?: string,
     buttonSubmitTitle?: string,
 }
 
 
 let preResult = {}
-export function GForm<T = any>({onSubmit, formElements, formTitle, buttonSubmitTitle }: IGFormProps<T>) {
+export function GForm<T = any>({
+    onSubmit, 
+    formElements, 
+    formTitle, 
+    buttonSubmitTitle, 
+    formExtraButtons,
+}: IGFormProps<T>) {
     
     const [result, setResult] = useState<any>({})
     const [submitPressed, setSubmitPressed] = useState(0)
@@ -55,7 +67,6 @@ export function GForm<T = any>({onSubmit, formElements, formTitle, buttonSubmitT
                 validFlag = false
         });
 
-        alert(validFlag)
         if(validFlag) {
             preResult={}
             setResult({})
@@ -108,18 +119,32 @@ export function GForm<T = any>({onSubmit, formElements, formTitle, buttonSubmitT
                     />
             }
         })
-        
         return <View style={styles.elementsContainer}>{elements}</View>
     }
+
+    function ExtraButtons() {
+        if(formExtraButtons) 
+            return <View>{formExtraButtons.map(button => {
+                return <Button
+                    key={button.title}
+                    style={styles.buttons}
+                    title={button.title}
+                    onPress={button.onPressButton}
+                />
+            })}</View>
+        else return <View style={{display:"none"}}></View>
+    }
+
 
     return (
         <View style={styles.container}>
             <Text style={formTitle? styles.title : {display:"none"}}>{formTitle}</Text>
             <FormElements/>
-            <Button 
+            <Button
                 title={submitTitle}
                 onPress={beforeOnSubmit}
             />
+            <ExtraButtons/>
         </View>
     )
 }
@@ -140,5 +165,8 @@ const styles = StyleSheet.create({
         width: 250,
         marginBottom: 15,
     },
-    element: {}
+    element: {},
+    buttons: {
+        marginTop: 15
+    }
 })

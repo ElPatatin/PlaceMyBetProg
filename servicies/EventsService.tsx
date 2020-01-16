@@ -17,7 +17,25 @@ function findAll(): Promise<Array<IEvent>> {
         })
     })
 }
+function findOneById(id:number) {
+    return PlaceMyBetDataSource({
+        path:"eventos",
+        method: "GET",
+        params: `id=${id}`
+    }).then((response) => {
+        return response.map(element => {
+            return {
+                id: element.IdEvento,
+                localTeam: element.EquipoLocal,
+                guestTeam: element.EquipoVisitante,
+                startDate: element.InicioPartido,
+                endData: element.FinalPartido
+            }
+        })
+    })
+}
 
 export default {
-    findAll: findAll
+    findAll: findAll,
+    findOneById: findOneById
 }

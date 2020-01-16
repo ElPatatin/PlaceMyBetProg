@@ -4,12 +4,10 @@ import { View, Button, StyleSheet } from "react-native";
 
 
 interface ISessionTemplate<T> {
-    lowerButtonTitle: string,
-    formProps: IGFormProps<T>,
-    onPressLowerButton() : void
+    formProps: IGFormProps<T>
 }
 
-export default function SessionTemplate<T = any>({lowerButtonTitle, formProps, onPressLowerButton}: ISessionTemplate<T>) {
+export default function SessionTemplate<T = any>({formProps}: ISessionTemplate<T>) {
     return (
         <View style={styles.container}>
             <GForm<T> 
@@ -17,8 +15,8 @@ export default function SessionTemplate<T = any>({lowerButtonTitle, formProps, o
                 formElements={formProps.formElements}
                 formTitle={formProps.formTitle}
                 buttonSubmitTitle={formProps.buttonSubmitTitle}
+                formExtraButtons={formProps.formExtraButtons}
             />
-            <Button title={lowerButtonTitle} onPress={onPressLowerButton}/>
         </View>
     )
 }

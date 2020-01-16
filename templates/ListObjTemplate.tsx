@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { FlatList, Text, View } from "react-native";
+import { FlatList, Text, View, StyleSheet } from "react-native";
 
 interface IListObjProps {
     title: string,
@@ -16,7 +16,7 @@ export default function ListObjTemplate ({dataSource, title}:IListObjProps) {
     }, [])
 
     return (
-        <View>
+        <View style={styles.container}>
             <Text>{title}</Text>
             <FlatList 
                 data={data}
@@ -26,3 +26,13 @@ export default function ListObjTemplate ({dataSource, title}:IListObjProps) {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+  });
+  
